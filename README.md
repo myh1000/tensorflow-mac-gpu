@@ -124,7 +124,7 @@ README.md for more details. [default is: /usr/local/cuda]: /usr/local/cuda
 Please specify the Cudnn version you want to use. [Leave empty to use system
 default]: 6.5
 
-Please specify the location where the cuDNN 4.0.4 library is installed. Refer to
+Please specify the location where the cuDNN 6.5 library is installed. Refer to
 README.md for more details. [default is: /usr/local/cuda]:
 
 Please specify a list of comma-separated Cuda compute capabilities you want to
