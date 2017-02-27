@@ -143,11 +143,11 @@ Configuration finished
 ```
 Now we can build the tensorflow pip package. This will take awhile.
 ```
-bazel build -c opt --config=cuda //tensorflow/cc:tutorials_example_trainer
+bazel build --config opt --config=cuda //tensorflow/tools/pip_package:build_pip_package
 bazel-bin/tensorflow/tools/pip_package/build_pip_package /tmp/tensorflow_pkg
 sudo pip install /tmp/tensorflow_pkg/tensorflow-0.9.0-py2-none-any.whl
 ```
-
+If you want to have tensorflow for both python and python3, you will have to recompile starting from ```./configure```
 ## Verify Installation
 
 You need to exit the tensorflow directory ```cd ~``` in order to test your installation or all you will recieve is:
@@ -155,7 +155,7 @@ You need to exit the tensorflow directory ```cd ~``` in order to test your insta
 ImportError: cannot import name 'pywrap_tensorflow'
 ```
 Now run ```python``` and run a test script.
-```
+```python
 import tensorflow as tf
 
 # Creates a graph.
@@ -205,12 +205,12 @@ I tensorflow/core/common_runtime/simple_placer.cc:818] a: /job:localhost/replica
 
  If you don't see your error [here](https://gist.github.com/Mistobaan/dd32287eeb6859c6668d#caveats), then read on for the errors I had.
 
- ```
+ ```python
  ImportError: cannot import name 'pywrap_tensorflow'
  ```
  You are running the script from the same tensorflow directory and python is using the local directory as the module. Change directory ```cd ~```
 
-```
+```python
 >>> import tensorflow
 I tensorflow/stream_executor/dso_loader.cc:108] successfully opened CUDA library libcublas.7.5.dylib locally
 Segmentation fault: 11
