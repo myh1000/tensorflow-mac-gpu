@@ -7,14 +7,14 @@ These instructions are what I did to install tensorflow on my machine after a se
 ## Prerequisites
 
 Update ```brew``` and install latest packages.
-```
+```bash
 brew update
 brew install coreutils swig bazel
 ```
 Now you can either install CUDA via ```brew``` or get it from NVIDIA themselves [here.](https://developer.nvidia.com/cuda-downloads)
 
 Check to make sure the version is above ```7.5```
-```
+```bash
 brew cask info cuda
 ```
 ```
@@ -30,14 +30,14 @@ Now you need to get NVIDIA's cuDNN library. You will have to register and downlo
 I personally used cuDNN-6.5 for v2, becuase thats what worked, but you might find that v5 works better for you.
 
 Once downloaded you need to manually copy the files over the ```/usr/local/cuda/``` directory.
-```
+```bash
 tar xzvf ~/Downloads/cudnn-6.5-osx-x64-v2.0-rc.tgz
 sudo mv -v cuda/lib/libcudnn* /usr/local/cuda/lib
 sudo mv -v cuda/include/cudnn.h /usr/local/cuda/include
 ```
 
 add in your ```~/.bash_profile``` the reference to ```/usr/local/cuda/lib```. You will need it in order for tensorflow to find the libraries.
-```
+```bash
 export LD_LIBRARY_PATH="$LD_LIBRARY_PATH:/usr/local/cuda/lib"
 ```
 Others have instead exported ```DYLD_LIBRARY_PATH``` instead of ```LD_LIBRARY_PATH```, so if the installation fails or there are problems importing tensorflow, try changing this.
@@ -47,7 +47,7 @@ After that, reload the bash_profile ```. ~/.bash_profile``` or just close and re
 Now you will need to find the Compute Capability for your graphics card. One way to do it is to find the exact model NVIDIA card you have and look up the model on the list here: https://developer.nvidia.com/cuda-gpus.
 
 Another way is to compile the deviceQuery utility found inside the cuda sdk repository.
-```
+```bash
 cd /usr/local/cuda/samples
 sudo make -C 1_Utilities/deviceQuery
 ./bin/x86_64/darwin/release/deviceQuery
@@ -100,7 +100,7 @@ Here you can confirm that the driver is set to 7.5 (```7.5 / 7.5```) and you can
 ## Clone Tensorflow
 
 You will need to clone the repository.
-```
+```bash
 git clone --recurse-submodules https://github.com/tensorflow/tensorflow
 cd tensorflow
 git checkout master
@@ -142,16 +142,17 @@ Setting up CUPTI lib64
 Configuration finished
 ```
 Now we can build the tensorflow pip package. This will take awhile.
-```
+```bash
 bazel build --config opt --config=cuda //tensorflow/tools/pip_package:build_pip_package
 bazel-bin/tensorflow/tools/pip_package/build_pip_package /tmp/tensorflow_pkg
 sudo pip install /tmp/tensorflow_pkg/tensorflow-0.9.0-py2-none-any.whl
 ```
-If you want to have tensorflow for both python and python3, you will have to recompile starting from ```./configure```
+If you want to have tensorflow for both python and python3, you will have to recompile starting from ```./configure```, and using pip3 and the proper package for each build.
+
 ## Verify Installation
 
 You need to exit the tensorflow directory ```cd ~``` in order to test your installation or all you will recieve is:
-```
+```python
 ImportError: cannot import name 'pywrap_tensorflow'
 ```
 Now run ```python``` and run a test script.
@@ -216,7 +217,7 @@ I tensorflow/stream_executor/dso_loader.cc:108] successfully opened CUDA library
 Segmentation fault: 11
 ```
 This error most likely occurred because tensorflow was unable to find the CUDA library. Make sure to set the environment variable.
-```
+```bash
 export LD_LIBRARY_PATH=/usr/local/cuda/lib:$LD_LIBRARY_PATH
 ```
 If you did this earlier, and you get this error, try replacing ```LD_LIBRARY_PATH``` with ```DYLD_LIBRARY_PATH```.
